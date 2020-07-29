@@ -5,6 +5,8 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String username;
 
+    private String age;
+
     public String getUsername() {
         return username;
     }
