@@ -1,0 +1,37 @@
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="jdbc.properties"/>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <!--配置 tk.mybatis 插件-->
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="tk.mybatis.MyMapper"/>
+        </plugin>
+
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.user}"
+                        password="${jdbc.password}">
+        </jdbcConnection>
+
+        <!--配置实体的存放路径-->
+        <javaModelGenerator targetPackage="com.ccb.hello.spring.boot.thymeleaf.entity"
+                            targetProject="src/main/java"/>
+        <!--配置mapper的路径-->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources"/>
+        <!--配置DAO的存放路径-->
+        <javaClientGenerator targetPackage="com.ccb.hello.spring.boot.thymeleaf.dao"
+                             targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+         <!--配置需要生成的表，%代表所有-->
+        <table tableName="testtable">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
+    </context>
+</generatorConfiguration>
