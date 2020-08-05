@@ -12,4 +12,15 @@
     <result column="hostname" jdbcType="VARCHAR" property="hostname" />
     <result column="entertime" jdbcType="VARCHAR" property="entertime" />
   </resultMap>
+
+
+  <select id="getTestTypeByNameIsDepname" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable"  resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
+    select * from testtable
+    <where>
+      <if test="deplymentname != null and deplymentname !=''">
+        deplymentname = #{deplymentname}
+      </if>
+    </where>
+
+  </select>
 </mapper>
