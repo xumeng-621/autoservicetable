@@ -8,21 +8,28 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.ccb</groupId>
     <artifactId>hello-spring-boot-thymeleaf</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>hello-spring-boot-thymeleaf</name>
     <description>Demo project for Spring Boot</description>
-
     <properties>
         <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
+        <!--前端引擎 start-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
+        <!--采用不严格的html5格式-->
+        <dependency>
+            <groupId>net.sourceforge.nekohtml</groupId>
+            <artifactId>nekohtml</artifactId>
+        </dependency>
+        <!--前端引擎 end-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -39,31 +46,34 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>net.sourceforge.nekohtml</groupId>
-            <artifactId>nekohtml</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
             <version>1.1.10</version>
         </dependency>
+        <!--mysql的驱动start-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
            <scope>runtime</scope>
         </dependency>
+        <!--mysql的驱动end-->
+        <!--整合tk.mybatis  start-->
         <dependency>
             <groupId>tk.mybatis</groupId>
             <artifactId>mapper-spring-boot-starter</artifactId>
             <version>2.1.5</version>
         </dependency>
+        <!--整合tk.mybatis  end-->
+        <!--分页start-->
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper-spring-boot-starter</artifactId>
             <version>1.2.5</version>
         </dependency>
-
+        <!--分页end-->
+        <!--excel的导入导出依赖start-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -79,7 +89,7 @@
             <artifactId>poi-ooxml</artifactId>
             <version>3.15</version>
         </dependency>
-
+        <!--excel的导入导出依赖end-->
         <!-- swagger -->
         <dependency>
             <groupId>io.springfox</groupId>
@@ -101,6 +111,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--与数据库连接，自动生成实体类，dao，mapper start-->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
@@ -125,6 +136,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <!--与数据库连接，自动生成实体类，dao，mapper end-->
         </plugins>
     </build>
 
