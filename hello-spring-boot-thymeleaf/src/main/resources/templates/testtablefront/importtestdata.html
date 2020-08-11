@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>数据对比导出</title>
+</head>
+<body>
+<form method="post" id="create_form" action="/main/MatchingServer" enctype="multipart/form-data">
+    　　<table style="display: table;">
+    　　　　<tr>
+    　　　　　　<td><input type="file" name="file"></td>
+    　　　　</tr>
+    　　　　<tr>
+    　　　　　　<td colspan='2'>
+    　　　　　　　　<div>
+    　　　　　　　　　　<button type="submit">提交</button>
+    　　　　　　　　</div>
+    　　　　　　</td>
+    　　　　</tr>
+    　　</table>
+</form>
+</body>
+</html>
