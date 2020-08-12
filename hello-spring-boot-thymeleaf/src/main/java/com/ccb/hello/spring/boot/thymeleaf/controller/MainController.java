@@ -59,7 +59,6 @@ public class MainController {
 
         //读取指定路径下的excel
         try {
-            //输入流
 
             boolean isExcel2003 = file.getName().toLowerCase().endsWith("xls")?true:false;
             if(isExcel2003){
@@ -76,7 +75,6 @@ public class MainController {
 
             //获取excel有多少条数据
             int rowSize = sheetAt.getLastRowNum();
-           // int physicalNumberOfRows = sheetAt.getLastRowNum();
 
             String str= "";
             //循环取出数据并赋值
