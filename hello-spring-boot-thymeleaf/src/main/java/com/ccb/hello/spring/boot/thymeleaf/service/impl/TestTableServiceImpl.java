@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,4 +35,11 @@ public class TestTableServiceImpl implements TestTableService {
         testtable.setEntertime(dateTime);
         testtableMapper.insert(testtable);
     }
+
+    @Override
+    public List<Testtable> getTestTypeByNameIsDepname(String deplymentname) {
+        return testtableMapper.getTestTypeByNameIsDepname(deplymentname);
+    }
+
+
 }
