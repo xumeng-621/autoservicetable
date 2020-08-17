@@ -1,13 +1,13 @@
 package com.ccb.hello.spring.boot.thymeleaf.controller;
 
 import com.ccb.hello.spring.boot.thymeleaf.service.TestTableService;
+import com.ccb.hello.spring.boot.thymeleaf.util.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -23,9 +23,41 @@ public class TestTableController {
     public String testAdd(@RequestParam(value = "systemname")String systemname,
                           @RequestParam(value = "deplymentname")String deplymentname,
                           @RequestParam(value = "unittype")String unittype,
-                          @RequestParam(value = "hostname")String hostname){
+                          @RequestParam(value = "hostname")String hostname, Model model){
 
-        testTableService.testAdd(systemname,deplymentname,unittype,hostname);
+       ResponseEntity re = testTableService.testAdd(systemname,deplymentname,unittype,hostname);
+       model.addAttribute("re",re);
         return "/testtablefront/testadd";
+    }
+    @RequestMapping(value = "/testtablefront/totestselect",method = RequestMethod.GET)
+    public String toTestSelect(Model model){
+
+        return "/testtablefront/testselect";
+    }
+    @RequestMapping(value = "/testtablefront/testselect",method = RequestMethod.POST)
+    private String testSelect( @RequestParam(value = "id")String id,
+                              @RequestParam(value = "systemname")String systemname,
+                              @RequestParam(value = "deplymentname")String deplymentname,
+                              @RequestParam(value = "unittype")String unittype,
+                              @RequestParam(value = "hostname")String hostname,Model model){
+        ResponseEntity re = testTableService.testSelect(id,systemname,deplymentname,unittype,hostname);
+        model.addAttribute("re",re);
+        return "/testtablefront/testselect";
+    }
+    @RequestMapping(value = "/testtablefront/testupdate",method = RequestMethod.GET)
+    private String testUpdate( @RequestParam(value = "id")String id,
+                               @RequestParam(value = "systemname")String systemname,
+                               @RequestParam(value = "deplymentname")String deplymentname,
+                               @RequestParam(value = "unittype")String unittype,
+                               @RequestParam(value = "hostname")String hostname,Model model){
+        ResponseEntity re = testTableService.testUpdate(id,systemname,deplymentname,unittype,hostname);
+        model.addAttribute("re",re);
+        return "/testtablefront/testupdate";
+    }
+    @RequestMapping(value = "/testtablefront/testdelete",method = RequestMethod.GET)
+    private String testDelete(@RequestParam(value = "id")String id,Model model){
+        ResponseEntity re = testTableService.testDelete(id);
+        model.addAttribute("re",re);
+        return "/testtablefront/testdelete";
     }
 }

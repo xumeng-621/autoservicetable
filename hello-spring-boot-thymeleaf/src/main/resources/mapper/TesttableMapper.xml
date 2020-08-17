@@ -23,4 +23,49 @@
     </where>
 
   </select>
+  <select id="testSelect" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable"  resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
+    select * from testtable
+    <where>
+      1=1
+      <if test="id != null and id !=''">
+        and id = #{id}
+      </if>
+      <if test="systemname != null and systemname !=''">
+        and systemname = #{systemname}
+      </if>
+      <if test="deplymentname != null and deplymentname !=''">
+        and deplymentname = #{deplymentname}
+      </if>
+      <if test="unittype != null and unittype !=''">
+        and unittype = #{unittype}
+      </if>
+      <if test="hostname != null and hostname !=''">
+        and hostname = #{hostname}
+      </if>
+    </where>
+
+  </select>
+  <update id="testUpdate" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable" >
+    update testtable
+    <trim prefix="set" suffixOverrides=",">
+      <if test="systemname != null and systemname !=''">
+        systemname=#{systemname},
+      </if>
+      <if test="deplymentname != null and deplymentname !=''">
+        deplymentname=#{deplymentname},
+      </if>
+      <if test="unittype != null and unittype !=''">
+        unittype=#{unittype},
+      </if>
+      <if test="hostname != null and hostname !=''">
+        hostname=#{hostname},
+      </if>
+    </trim>
+    <where>
+      id = #{id}
+    </where>
+  </update>
+  <delete id="testDeleteById" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
+        DELETE FROM testtable WHERE id = #{id}
+  </delete>
 </mapper>
