@@ -1,19 +1,20 @@
 package com.ccb.hello.spring.boot.thymeleaf.controller;
 
 import com.ccb.hello.spring.boot.thymeleaf.service.TestTableService;
+import com.ccb.hello.spring.boot.thymeleaf.service.UserService;
 import com.ccb.hello.spring.boot.thymeleaf.util.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-
 
 @Controller
 public class TestTableController {
     @Autowired
     private TestTableService testTableService;
+    @Autowired
+    private UserService userService;
     @RequestMapping(value = "/testtablefront/totestadd",method = RequestMethod.GET)
     public String toTestAdd(Model model){
 
@@ -59,5 +60,10 @@ public class TestTableController {
         ResponseEntity re = testTableService.testDelete(id);
         model.addAttribute("re",re);
         return "/testtablefront/testdelete";
+    }
+    @RequestMapping(value = "/testtablefront/useradd",method = RequestMethod.GET)
+    private String userAdd(@RequestParam(value = "name")String name){
+        userService.userAdd(name);
+       return null;
     }
 }
