@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccb.hello.spring.boot.thymeleaf.dao.ToexamineMapper">
+  <resultMap id="BaseResultMap" type="com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="versriondate" jdbcType="VARCHAR" property="versriondate" />
+    <result column="baseline" jdbcType="VARCHAR" property="baseline" />
+    <result column="systemName" jdbcType="VARCHAR" property="systemname" />
+    <result column="deploymenplatform" jdbcType="VARCHAR" property="deploymenplatform" />
+    <result column="chinesename" jdbcType="VARCHAR" property="chinesename" />
+    <result column="physicalsubsystem" jdbcType="VARCHAR" property="physicalsubsystem" />
+    <result column="branch" jdbcType="VARCHAR" property="branch" />
+    <result column="productionstatus" jdbcType="VARCHAR" property="productionstatus" />
+    <result column="devtasks" jdbcType="VARCHAR" property="devtasks" />
+    <result column="requirementdocument" jdbcType="VARCHAR" property="requirementdocument" />
+    <result column="functionpoint" jdbcType="VARCHAR" property="functionpoint" />
+    <result column="testPlan" jdbcType="VARCHAR" property="testplan" />
+    <result column="process" jdbcType="VARCHAR" property="process" />
+    <result column="totalnumber" jdbcType="INTEGER" property="totalnumber" />
+    <result column="starteNumber" jdbcType="INTEGER" property="startenumber" />
+    <result column="cover" jdbcType="VARCHAR" property="cover" />
+    <result column="finalcase" jdbcType="INTEGER" property="finalcase" />
+    <result column="endnumber" jdbcType="INTEGER" property="endnumber" />
+    <result column="resultStatus" jdbcType="VARCHAR" property="resultstatus" />
+    <result column="auditopinion" jdbcType="VARCHAR" property="auditopinion" />
+    <result column="installfiles" jdbcType="VARCHAR" property="installfiles" />
+    <result column="securitydocuments" jdbcType="VARCHAR" property="securitydocuments" />
+  </resultMap>
+</mapper>

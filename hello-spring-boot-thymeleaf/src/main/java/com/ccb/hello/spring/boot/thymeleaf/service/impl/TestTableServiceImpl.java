@@ -1,7 +1,5 @@
 package com.ccb.hello.spring.boot.thymeleaf.service.impl;
-import com.ccb.hello.spring.boot.thymeleaf.dao2.UserMapper;
 import com.ccb.hello.spring.boot.thymeleaf.entity.Testtable;
-import com.ccb.hello.spring.boot.thymeleaf.entity.User;
 import com.ccb.hello.spring.boot.thymeleaf.service.TestTableService;
 import com.ccb.hello.spring.boot.thymeleaf.util.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;

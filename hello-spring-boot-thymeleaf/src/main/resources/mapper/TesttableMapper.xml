@@ -14,7 +14,7 @@
   </resultMap>
 
 
-  <select id="getTestTypeByNameIsDepname" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable"  resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
+  <select id="getTestTypeByNameIsDepname" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable" resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
     select * from testtable
     <where>
       <if test="deplymentname != null and deplymentname !=''">
@@ -23,7 +23,7 @@
     </where>
 
   </select>
-  <select id="testSelect" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable"  resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
+  <select id="testSelect" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable" resultType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
     select * from testtable
     <where>
       1=1
@@ -45,7 +45,7 @@
     </where>
 
   </select>
-  <update id="testUpdate" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable" >
+  <update id="testUpdate" parameterType="com.ccb.hello.spring.boot.thymeleaf.entity.Testtable">
     update testtable
     <trim prefix="set" suffixOverrides=",">
       <if test="systemname != null and systemname !=''">
