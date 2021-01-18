@@ -63,11 +63,11 @@ public class CheckEditionController {
             for(int j = 1; j<=rowSize;j++){
                 Toexamine toexamine = new Toexamine();
                 Row row = sheetAt.getRow(j);
-                toexamine.setBaseline(row.getCell(0).toString());
-                toexamine.setPhysicalsubsystem(row.getCell(1).toString());
-                toexamine.setDeploymenplatform(row.getCell(3).toString());
-                toexamine.setBranch(row.getCell(5).toString());
-                toexamine.setDevtasks(row.getCell(21).toString());
+                toexamine.setBaseline(row.getCell(0).toString().substring(0,5));
+                toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
+                toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
+                toexamine.setBranch(row.getCell(5).getStringCellValue());
+                toexamine.setDevtasks(row.getCell(21).getStringCellValue());
                 checkEditionService.saveToexamine(toexamine);
             }
         }else{
