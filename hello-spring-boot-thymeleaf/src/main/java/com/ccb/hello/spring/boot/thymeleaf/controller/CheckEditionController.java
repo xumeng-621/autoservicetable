@@ -10,6 +10,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,9 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
@@ -34,7 +33,64 @@ public class CheckEditionController {
     @Autowired
     private CheckEditionService checkEditionService;
     @RequestMapping(value = "/toimportdata",method = RequestMethod.GET)
-    public String toImportData(){
+    public String toImportData(Model model){
+        return "/testtablefront/checkedition";
+    }
+
+    @RequestMapping(value = "toAddOrUpdateData",method = RequestMethod.GET)
+    @ApiOperation(value = "前去增加或修改页面",notes = "前去增加或修改页面")
+    public String toAddOrUpdateData(Model model){
+        String id = (String)model.getAttribute("id");
+        if(!StringUtils.isEmpty(id)){
+            Toexamine toexamine = checkEditionService.selectToexamineById(id);
+            model.addAttribute("toexamine",toexamine);
+        }
+        return "";
+    }
+
+    @RequestMapping(value = "/addOrUpdateData",method = RequestMethod.GET)
+    @ApiOperation(value = "添加或修改数据",notes = "添加或修改数据")
+    @ResponseBody
+    public String addOrUpdateData(Model model){
+        Toexamine toexamine = new Toexamine();
+        //todo
+       String id = (String)model.getAttribute("id");
+       if(StringUtils.isEmpty(id)){
+           checkEditionService.addToexamine(toexamine);
+       }else {
+           checkEditionService.updateToexamine(toexamine);
+       }
+       return   selectData(model);
+    }
+    @RequestMapping(value = "/deleteInIds",method = RequestMethod.GET)
+    @ApiOperation(value = "按id删除数据",notes = "按id删除数据")
+    @ResponseBody
+    public String deleteInIds(Model model){
+        String Ids = (String)model.getAttribute("Ids");
+        checkEditionService.deleteInIds(Ids);
+        return selectData(model);
+    }
+    @RequestMapping(value = "/selectData",method = RequestMethod.GET)
+    @ApiOperation(value = "按条件查询数据",notes = "按条件查询数据")
+    @ResponseBody
+    public String selectData(Model model){
+        String branch = (String)model.getAttribute("branch");
+        String devtasks = (String)model.getAttribute("devtasks");
+        String resultstatus = (String)model.getAttribute("resultstatus");
+        int currPage = (Integer)model.getAttribute("currPage");
+        //Toexamine toexamine = new Toexamine();
+        Map<String,String> map = new HashMap<String,String>();
+        if(!StringUtils.isEmpty(branch)){
+            map.put("branch",branch);
+        }
+        if(!StringUtils.isEmpty(devtasks)){
+            map.put("devtasks",devtasks);
+        }
+        if(!StringUtils.isEmpty(resultstatus)){
+            map.put("resultstatus",resultstatus);
+        }
+        List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
+        model.addAttribute("list",list);
         return "/testtablefront/checkedition";
     }
     @RequestMapping(value = "/importData",method = RequestMethod.POST)
@@ -63,11 +119,21 @@ public class CheckEditionController {
             for(int j = 1; j<=rowSize;j++){
                 Toexamine toexamine = new Toexamine();
                 Row row = sheetAt.getRow(j);
-                toexamine.setBaseline(row.getCell(0).toString().substring(0,5));
-                toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
-                toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
-                toexamine.setBranch(row.getCell(5).getStringCellValue());
-                toexamine.setDevtasks(row.getCell(21).getStringCellValue());
+                if(!StringUtils.isEmpty(row.getCell(0).toString())){
+                    toexamine.setBaseline(row.getCell(0).toString());
+                }
+                if(!StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
+                    toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
+                }
+                if(!StringUtils.isEmpty(row.getCell(3).getStringCellValue())){
+                    toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
+                }
+                if(!StringUtils.isEmpty(row.getCell(5).getStringCellValue())){
+                    toexamine.setBranch(row.getCell(5).getStringCellValue());
+                }
+                if(!StringUtils.isEmpty(row.getCell(21).getStringCellValue())){
+                    toexamine.setDevtasks(row.getCell(21).getStringCellValue());
+                }
                 checkEditionService.saveToexamine(toexamine);
             }
         }else{

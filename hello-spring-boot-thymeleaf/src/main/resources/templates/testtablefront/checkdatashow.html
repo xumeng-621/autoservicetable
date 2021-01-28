@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="webjars/bootstrap/css/bootstrap.css">
+    <script src="webjars/jquery/jquery.js"></script>
+    <script src="webjars/bootstrap/js/bootstrap.js"></script>
+</head>
+<body>
+    <!-- 中间 -->
+    <section>
+        <h2>正在进行 <span id="todocount"></span></h2>
+        <ol id="todolist" class="demo-box">
+
+        </ol>
+        <h2>已经完成 <span id="donecount"></span></h2>
+        <ul id="donelist">
+
+        </ul>
+    </section>
+</body>
+<script>
+    $(function () {
+        //进入页面查询数据
+        $.ajax({
+            type:"GET",
+            url:"/checkEditionController/selectData",
+            data:{
+                "branch":"${#branch}",
+                "devtasks":"${#devtasks}",
+                "resultstatus":"${#resultstatus}"
+            },
+            success:function (result) {
+
+                
+            }
+        })
+        
+    })
+</script>
+</html>
