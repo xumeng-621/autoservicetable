@@ -38,7 +38,7 @@ public class CheckEditionController {
     }
 
     @RequestMapping(value = "toAddOrUpdateData",method = RequestMethod.GET)
-    @ApiOperation(value = "前去增加或修改页面",notes ="前去增加或修改页面")
+    @ApiOperation(value = "前去增加或修改页面",notes ="前去增加或修改页面 ")
     public String toAddOrUpdateData(Model model){
         model.getAttribute("list");
         String id = (String)model.getAttribute("id");
