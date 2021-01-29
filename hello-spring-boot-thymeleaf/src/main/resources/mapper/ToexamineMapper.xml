@@ -28,6 +28,8 @@
     <result column="auditopinion" jdbcType="VARCHAR" property="auditopinion" />
     <result column="installfiles" jdbcType="VARCHAR" property="installfiles" />
     <result column="securitydocuments" jdbcType="VARCHAR" property="securitydocuments" />
+    <result column="exchangenotes" jdbcType="VARCHAR" property="exchangenotes" />
+    <result column="centerresult" jdbcType="VARCHAR" property="centerresult" />
   </resultMap>
   <select id="slectData" parameterType="java.util.Map" resultMap="com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine">
     select * from toexamine limit #{currIndex} , #{showNum}
@@ -46,7 +48,7 @@
   </select>
   <delete id="deleteInIds" parameterType="java.lang.String">
     DELETE FROM toexamine where id in
-    <foreach item="idItem" collection="ids" open="(" separator="," close=")">
+    <foreach close=")" collection="ids" item="idItem" open="(" separator=",">
       #{idItem}
     </foreach>
   </delete>

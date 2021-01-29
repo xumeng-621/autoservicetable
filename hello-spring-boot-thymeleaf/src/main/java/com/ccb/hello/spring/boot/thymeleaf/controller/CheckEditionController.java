@@ -38,8 +38,9 @@ public class CheckEditionController {
     }
 
     @RequestMapping(value = "toAddOrUpdateData",method = RequestMethod.GET)
-    @ApiOperation(value = "前去增加或修改页面",notes = "前去增加或修改页面")
+    @ApiOperation(value = "前去增加或修改页面",notes ="前去增加或修改页面")
     public String toAddOrUpdateData(Model model){
+        model.getAttribute("list");
         String id = (String)model.getAttribute("id");
         if(!StringUtils.isEmpty(id)){
             Toexamine toexamine = checkEditionService.selectToexamineById(id);
@@ -49,7 +50,11 @@ public class CheckEditionController {
     }
 
     @RequestMapping(value = "/addOrUpdateData",method = RequestMethod.GET)
-    @ApiOperation(value = "添加或修改数据",notes = "添加或修改数据")
+    @ApiOperation(value = "添加或修改数据",notes =  "增加或修改页面：投产基线（baseline）物理子系统（physicalsubsystem）部署平台（deploymenplatform）" +
+            "所属分行（branch）开发任务（devtasks）系统中文名（chinesename）是否投产（productionstatus）是否提交需求文档（requirementdocument）" +
+            "是否存在功能的介绍（functionpoint)是否提交测试方案（testplan）是否存在根据记录（process）初始案例总数（totalnumber）初始反案例数（startenumber）" +
+            "功能点覆盖率（cover）最终案例总数（finalcase）最终反案例数（endnumber）功能测试检核结果（resultStatus）审核意见（auditopinion）" +
+            "是否提交安装测试报告（installfiles）是否提交安全测试报告（securitydocuments）沟通记录(exchangenotes)测试中心投产检验结论(centerresult)")
     @ResponseBody
     public String addOrUpdateData(Model model){
         Toexamine toexamine = new Toexamine();
@@ -119,20 +124,29 @@ public class CheckEditionController {
             for(int j = 1; j<=rowSize;j++){
                 Toexamine toexamine = new Toexamine();
                 Row row = sheetAt.getRow(j);
+                //基线号
                 if(!StringUtils.isEmpty(row.getCell(0).toString())){
                     toexamine.setBaseline(row.getCell(0).toString());
                 }
+                //物理子系统
                 if(!StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
                     toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
                 }
+                //部署平台
                 if(!StringUtils.isEmpty(row.getCell(3).getStringCellValue())){
                     toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
                 }
+                //所属银行
                 if(!StringUtils.isEmpty(row.getCell(5).getStringCellValue())){
                     toexamine.setBranch(row.getCell(5).getStringCellValue());
                 }
+                //开发任务
                 if(!StringUtils.isEmpty(row.getCell(21).getStringCellValue())){
                     toexamine.setDevtasks(row.getCell(21).getStringCellValue());
+                }
+                //版本日期
+                if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
+                    toexamine.setVersriondate(row.getCell(27).getStringCellValue());
                 }
                 checkEditionService.saveToexamine(toexamine);
             }
@@ -175,6 +189,7 @@ public class CheckEditionController {
         list.add("备注");
         list.add("安全测试报告");
         list.add("备注");
+        list.add("测试中心投产检验结论");
         return list;
     }
     @RequestMapping(value = "/exportData",method = RequestMethod.GET)
@@ -345,6 +360,10 @@ public class CheckEditionController {
                 cell38.setCellValue(rowData.getSecuritydocuments());
             }
             Cell cell39 = dataRow.createCell(38);
+            Cell cell40 = dataRow.createCell(39);
+            if(!StringUtils.isEmpty(rowData.getCenterresult())){
+                cell40.setCellValue(rowData.getCenterresult());
+            }
 
             rowIndex++;
         }

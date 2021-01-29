@@ -122,6 +122,16 @@ public class Toexamine {
     private String securitydocuments;
 
     /**
+     * 沟通记录
+     */
+    private String exchangenotes;
+
+    /**
+     * 测试中心投产检验结论
+     */
+    private String centerresult;
+
+    /**
      * @return id
      */
     public Integer getId() {
@@ -529,5 +539,41 @@ public class Toexamine {
      */
     public void setSecuritydocuments(String securitydocuments) {
         this.securitydocuments = securitydocuments;
+    }
+
+    /**
+     * 获取沟通记录
+     *
+     * @return exchangenotes - 沟通记录
+     */
+    public String getExchangenotes() {
+        return exchangenotes;
+    }
+
+    /**
+     * 设置沟通记录
+     *
+     * @param exchangenotes 沟通记录
+     */
+    public void setExchangenotes(String exchangenotes) {
+        this.exchangenotes = exchangenotes;
+    }
+
+    /**
+     * 获取测试中心投产检验结论
+     *
+     * @return centerresult - 测试中心投产检验结论
+     */
+    public String getCenterresult() {
+        return centerresult;
+    }
+
+    /**
+     * 设置测试中心投产检验结论
+     *
+     * @param centerresult 测试中心投产检验结论
+     */
+    public void setCenterresult(String centerresult) {
+        this.centerresult = centerresult;
     }
 }
