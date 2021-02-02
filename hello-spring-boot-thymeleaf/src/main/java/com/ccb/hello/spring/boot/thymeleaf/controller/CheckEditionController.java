@@ -112,7 +112,7 @@ public class CheckEditionController {
         }
         List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
         model.addAttribute("list",list);
-        return "/testtablefront/checkedition";
+        return "200";
     }
     @RequestMapping(value = "/importData",method = RequestMethod.POST)
     @ApiOperation(value = "导入接口",notes = "导入接口")
