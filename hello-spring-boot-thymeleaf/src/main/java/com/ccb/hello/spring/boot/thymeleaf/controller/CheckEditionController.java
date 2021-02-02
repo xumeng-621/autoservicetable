@@ -4,6 +4,7 @@ import com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine;
 import com.ccb.hello.spring.boot.thymeleaf.service.CheckEditionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,41 +51,55 @@ public class CheckEditionController {
         return "";
     }
 
-    @RequestMapping(value = "/addOrUpdateData",method = RequestMethod.GET )
-    @ApiOperation(value = "添加或修改数据",notes =  "增加或修改页面：投产基线（baseline）物理子系统（physicalsubsystem）部署平台（deploymenplatform）" +
+    @RequestMapping(value = "/add",method = RequestMethod.POST )
+    @ApiOperation(value = "添加数据",notes =  "增加页面：投产基线（baseline）物理子系统（physicalsubsystem）部署平台（deploymenplatform）" +
             "所属分行（branch）开发任务（devtasks）系统中文名（chinesename）是否投产（productionstatus）是否提交需求文档（requirementdocument）" +
             "是否存在功能的介绍（functionpoint)是否提交测试方案（testplan）是否存在根据记录（process）初始案例总数（totalnumber）初始反案例数（startenumber）" +
             "功能点覆盖率（cover）最终案例总数（finalcase）最终反案例数（endnumber）功能测试检核结果（resultStatus）审核意见（auditopinion）" +
             "是否提交安装测试报告（installfiles）是否提交安全测试报告（securitydocuments）沟通记录(exchangenotes)测试中心投产检验结论(centerresult)")
     @ResponseBody
-    public String addOrUpdateData(Model model){
-        Toexamine toexamine = new Toexamine();
-        //todo
-       String id = (String)model.getAttribute("id");
-       if(StringUtils.isEmpty(id)){
-           checkEditionService.addToexamine(toexamine);
-       }else {
-           checkEditionService.updateToexamine(toexamine);
-       }
-       return   selectData(model);
+    public String add(Model model,@RequestBody Toexamine toexamine){
+        if(toexamine!=null){
+            checkEditionService.addToexamine(toexamine);
+        }else{
+            return "000";
+        }
+
+       return   "200";
+    }
+    @RequestMapping(value = "/update",method = RequestMethod.POST )
+    @ApiOperation(value = "修改数据",notes = "修改数据")
+    @ResponseBody
+    public String update(Model model,@RequestBody List<Toexamine> list){
+        if(list!=null && list.size()>0){
+            for(Toexamine toexamine : list){
+                checkEditionService.updateToexamine(toexamine);
+            }
+        }
+        return "200";
     }
     @RequestMapping(value = "/deleteInIds",method = RequestMethod.GET)
     @ApiOperation(value = "按id删除数据",notes = "按id删除数据")
     @ResponseBody
-    public String deleteInIds(Model model){
-        String Ids = (String)model.getAttribute("Ids");
-        checkEditionService.deleteInIds(Ids);
-        return selectData(model);
+    public String deleteInIds(Model model,String Ids){
+        //String Ids = (String)model.getAttribute("Ids");
+        if(!StringUtils.isEmpty(Ids)){
+            checkEditionService.deleteInIds(Ids);
+        }
+        return "";
     }
     @RequestMapping(value = "/selectData",method = RequestMethod.GET)
     @ApiOperation(value = "按条件查询数据",notes = "按条件查询数据")
     @ResponseBody
-    public String selectData(Model model){
-        String branch = (String)model.getAttribute("branch");
+    public String selectData(Model model,String branch,String devtasks,String resultstatus,int currPage){
+       /* String branch = (String)model.getAttribute("branch");
         String devtasks = (String)model.getAttribute("devtasks");
-        String resultstatus = (String)model.getAttribute("resultstatus");
-        int currPage = (Integer)model.getAttribute("currPage");
+        String resultstatus = (String)model.getAttribute("resultstatus");*/
+        //int currPage = (Integer)model.getAttribute("currPage");
         //Toexamine toexamine = new Toexamine();
+        if(currPage==0){
+            currPage = 1;
+        }
         Map<String,String> map = new HashMap<String,String>();
         if(!StringUtils.isEmpty(branch)){
             map.put("branch",branch);
