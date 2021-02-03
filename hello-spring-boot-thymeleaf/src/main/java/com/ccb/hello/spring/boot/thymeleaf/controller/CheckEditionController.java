@@ -110,7 +110,9 @@ public class CheckEditionController {
         if(!StringUtils.isEmpty(resultstatus)){
             map.put("resultstatus",resultstatus);
         }
-        List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
+        //List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
+        Toexamine toexamine = new Toexamine();
+        List<Toexamine> list = checkEditionService.selectToexamine(toexamine);
         model.addAttribute("list",list);
         return "200";
     }
