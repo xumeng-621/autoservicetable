@@ -2,9 +2,9 @@ package com.ccb.hello.spring.boot.thymeleaf.controller;
 
 import com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine;
 import com.ccb.hello.spring.boot.thymeleaf.service.CheckEditionService;
+import com.ccb.hello.spring.boot.thymeleaf.util.ResponseEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
@@ -58,48 +58,63 @@ public class CheckEditionController {
             "功能点覆盖率（cover）最终案例总数（finalcase）最终反案例数（endnumber）功能测试检核结果（resultStatus）审核意见（auditopinion）" +
             "是否提交安装测试报告（installfiles）是否提交安全测试报告（securitydocuments）沟通记录(exchangenotes)测试中心投产检验结论(centerresult)")
     @ResponseBody
-    public String add(Model model,@RequestBody Toexamine toexamine){
+    public ResponseEntity add(@RequestBody Toexamine toexamine){
+
         if(toexamine!=null){
             checkEditionService.addToexamine(toexamine);
+            ResponseEntity re = new ResponseEntity("success");
+            return re;
         }else{
-            return "000";
+            ResponseEntity re = new ResponseEntity("000","fail");
+            return re;
         }
 
-       return   "200";
     }
     @RequestMapping(value = "/update",method = RequestMethod.POST )
     @ApiOperation(value = "修改数据",notes = "修改数据")
     @ResponseBody
-    public String update(Model model,@RequestBody List<Toexamine> list){
+    public ResponseEntity update(@RequestBody List<Toexamine> list){
         if(list!=null && list.size()>0){
             for(Toexamine toexamine : list){
                 checkEditionService.updateToexamine(toexamine);
             }
+            ResponseEntity re = new ResponseEntity("success");
+            return re;
+        }else{
+           ResponseEntity re = new ResponseEntity("000","fail");
+           return re;
         }
-        return "200";
     }
     @RequestMapping(value = "/deleteInIds",method = RequestMethod.GET)
     @ApiOperation(value = "按id删除数据",notes = "按id删除数据")
     @ResponseBody
-    public String deleteInIds(Model model,String Ids){
+    public ResponseEntity deleteInIds(String Ids){
         //String Ids = (String)model.getAttribute("Ids");
         if(!StringUtils.isEmpty(Ids)){
             checkEditionService.deleteInIds(Ids);
-        }
-        return "";
+            ResponseEntity re = new ResponseEntity("success");
+            return re;
+        }else{
+            ResponseEntity re = new ResponseEntity("000","fail");
+            return re;
+          }
+
     }
     @RequestMapping(value = "/selectData",method = RequestMethod.GET)
     @ApiOperation(value = "按条件查询数据",notes = "按条件查询数据")
     @ResponseBody
-    public String selectData(Model model,String branch,String devtasks,String resultstatus,int currPage){
+    public ResponseEntity selectData(Model model, String branch, String devtasks, String centerresult, String versriondate,Integer currPage){
        /* String branch = (String)model.getAttribute("branch");
         String devtasks = (String)model.getAttribute("devtasks");
         String resultstatus = (String)model.getAttribute("resultstatus");*/
         //int currPage = (Integer)model.getAttribute("currPage");
         //Toexamine toexamine = new Toexamine();
-        if(currPage==0){
+       /* if(currPage==0){
             currPage = 1;
-        }
+        }*/
+       if(currPage==null|| currPage==0){
+           currPage = 1;
+       }
         Map<String,String> map = new HashMap<String,String>();
         if(!StringUtils.isEmpty(branch)){
             map.put("branch",branch);
@@ -107,19 +122,29 @@ public class CheckEditionController {
         if(!StringUtils.isEmpty(devtasks)){
             map.put("devtasks",devtasks);
         }
-        if(!StringUtils.isEmpty(resultstatus)){
-            map.put("resultstatus",resultstatus);
+        if(!StringUtils.isEmpty(centerresult)){
+            map.put("resultstatus",centerresult);
         }
-        //List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
-        Toexamine toexamine = new Toexamine();
-        List<Toexamine> list = checkEditionService.selectToexamine(toexamine);
-        model.addAttribute("list",list);
-        return "200";
+        if(!StringUtils.isEmpty(versriondate)){
+            map.put("versriondate",versriondate);
+        }
+         List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
+        //Toexamine toexamine = new Toexamine();
+        //List<Toexamine> list = checkEditionService.selectToexamine(toexamine);
+        //model.addAttribute("list",list);
+        if(list!=null&&list.size()>0){
+            ResponseEntity re = new ResponseEntity(list);
+            return re;
+        }else{
+            ResponseEntity re = new ResponseEntity("000","list is null");
+            return re;
+        }
+
     }
     @RequestMapping(value = "/importData",method = RequestMethod.POST)
     @ApiOperation(value = "导入接口",notes = "导入接口")
     @ResponseBody
-    public void importData(MultipartFile file, HttpServletResponse response)throws IOException {
+    public ResponseEntity importData(MultipartFile file, HttpServletResponse response)throws IOException {
         //创建workbook
         Workbook workBook = null;
         InputStream ins = null;
@@ -163,13 +188,16 @@ public class CheckEditionController {
                     toexamine.setDevtasks(row.getCell(21).getStringCellValue());
                 }
                 //版本日期
-                if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
+                /*if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
                     toexamine.setVersriondate(row.getCell(27).getStringCellValue());
-                }
+                }*/
                 checkEditionService.saveToexamine(toexamine);
             }
+            ResponseEntity re = new ResponseEntity("success");
+            return re;
         }else{
-
+            ResponseEntity re = new ResponseEntity("file is null");
+            return re;
         }
 
     }
@@ -210,7 +238,7 @@ public class CheckEditionController {
         list.add("测试中心投产检验结论");
         return list;
     }
-    @RequestMapping(value = "/exportData",method = RequestMethod.GET)
+    @RequestMapping(value = "/exportData",method = RequestMethod.POST)
     @ApiOperation(value = "导出接口",notes = "导出接口")
     @ResponseBody
     public void exportData(HttpServletResponse response)throws IOException{

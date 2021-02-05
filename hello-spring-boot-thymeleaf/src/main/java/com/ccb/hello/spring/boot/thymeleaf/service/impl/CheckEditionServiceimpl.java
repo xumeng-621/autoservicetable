@@ -3,11 +3,10 @@ package com.ccb.hello.spring.boot.thymeleaf.service.impl;
 import com.ccb.hello.spring.boot.thymeleaf.dao.ToexamineMapper;
 import com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine;
 import com.ccb.hello.spring.boot.thymeleaf.service.CheckEditionService;
-import org.apache.commons.collections4.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class CheckEditionServiceimpl implements CheckEditionService {
     public List<Toexamine> selectDate(Map map, int currPage, int showNum){
         map.put("currIndex", (currPage-1)*showNum);
         map.put("showNum", showNum);
-        List<Toexamine> list = toexamineMapper.slectData(map);
+        List<Toexamine> list = toexamineMapper.findData(map);
         return list;
     }
     public void addToexamine(Toexamine toexamine){
@@ -34,8 +33,14 @@ public class CheckEditionServiceimpl implements CheckEditionService {
         toexamineMapper.updateByPrimaryKey(toexamine);
     }
     public void deleteInIds(String Ids){
-        String[] deleteId = Ids.split(",");
-        toexamineMapper.deleteInIds(deleteId);
+        if(!StringUtils.isEmpty(Ids)){
+            String idstr[] = Ids.split(",");
+            //toexamineMapper.deleteInIds(idstr);
+            for(String id :idstr){
+                toexamineMapper.deleteInIds(id);
+            }
+        }
+
     }
     public Toexamine selectToexamineById(String id){
         return toexamineMapper.selectByPrimaryKey(id);

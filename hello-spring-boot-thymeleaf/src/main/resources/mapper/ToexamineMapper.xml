@@ -31,19 +31,10 @@
     <result column="exchangenotes" jdbcType="VARCHAR" property="exchangenotes" />
     <result column="centerresult" jdbcType="VARCHAR" property="centerresult" />
   </resultMap>
-  <select id="slectData" parameterType="java.util.Map" resultMap="com.ccb.hello.spring.boot.thymeleaf.entity.Toexamine">
-    select * from toexamine limit #{currIndex} , #{showNum}
+  <select id="findData" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select * from toexamine
     <where>
-      1=1
-      <if test="branch != null and branch != ''">
-        and branch like "%"#{branch}"%"
-      </if>
-      <if test="devtasks != null and devtasks !=''">
-        and devtasks like "%"#{devtasks}"%"
-      </if>
-      <if test="resultstatus !=null and resultstatus !=''">
-        and resultstatus like "%"#{resultstatus}"%"
-      </if>
+      1=1 limit #{currIndex},#{showNum}
     </where>
   </select>
   <delete id="deleteInIds" parameterType="java.lang.String">
