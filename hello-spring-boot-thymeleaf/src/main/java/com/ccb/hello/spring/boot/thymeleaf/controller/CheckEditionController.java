@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -117,13 +118,13 @@ public class CheckEditionController {
        }
         Map<String,String> map = new HashMap<String,String>();
         if(!StringUtils.isEmpty(branch)){
-            map.put("branch",branch);
+            map.put("branch","%"+branch+"%");
         }
         if(!StringUtils.isEmpty(devtasks)){
-            map.put("devtasks",devtasks);
+            map.put("devtasks","%"+devtasks+"%");
         }
         if(!StringUtils.isEmpty(centerresult)){
-            map.put("resultstatus",centerresult);
+            map.put("centerresult",centerresult);
         }
         if(!StringUtils.isEmpty(versriondate)){
             map.put("versriondate",versriondate);
@@ -238,30 +239,46 @@ public class CheckEditionController {
         list.add("测试中心投产检验结论");
         return list;
     }
-    @RequestMapping(value = "/exportData",method = RequestMethod.POST)
+    @RequestMapping(value = "/exportData",method = RequestMethod.GET)
     @ApiOperation(value = "导出接口",notes = "导出接口")
     @ResponseBody
-    public void exportData(HttpServletResponse response)throws IOException{
+    public void exportData(HttpServletResponse response, HttpServletRequest request)throws IOException{
         // 创建写工作簿对象
         Workbook wb = new XSSFWorkbook();
         Sheet sheet = wb.createSheet("本次投产");
         int rowIndex = 0;
         rowIndex = writeTitlesToExcel(wb,sheet,getTitles());
         Toexamine toexamine = new Toexamine();
+        String branch = (String)request.getAttribute("branch");
+        String devtasks = (String)request.getAttribute("devtasks");
+        String centerresult = (String)request.getAttribute("centerresult");
+        String versriondate = (String)request.getAttribute("versriondate");
+        if(!StringUtils.isEmpty(branch)){
+            toexamine.setBranch(branch);
+        }
+        if(!StringUtils.isEmpty(devtasks)){
+            toexamine.setDevtasks(devtasks);
+        }
+        if(!StringUtils.isEmpty(centerresult)){
+            toexamine.setCenterresult(centerresult);
+        }
+        if(!StringUtils.isEmpty(versriondate)){
+            toexamine.setVersriondate(versriondate);
+        }
         List<Toexamine> toexaminesList = checkEditionService.selectToexamine(toexamine);
         writeRowsToExcel(wb, sheet,toexaminesList , rowIndex);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");//设置日期格式
         String format = df.format(new Date());
         // 设置输出的格式
-        response.reset();
+//        response.reset();
+        response.setCharacterEncoding(request.getCharacterEncoding());
         response.setContentType("application/octet-stream");
-       response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(format + ".xlsx","UTF-8"));
-        //response.setHeader("Content-Disposition", "attachment;filename=\"" + new String(format.getBytes("UTF-8"), "iso8859-1") + "\"");
+//       response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(format + ".xlsx","UTF-8"));
+        response.setHeader("Content-Disposition", "attachment;filename=guang.xlsx");
         response.setHeader("Cache-Control", "No-cache");
-        OutputStream os = response.getOutputStream();
-        wb.write(os);
-        os.flush();
-        os.close();
+        wb.write(response.getOutputStream());
+        response.flushBuffer();
+        wb.close();
     }
 
     private int writeTitlesToExcel(Workbook wb, Sheet sheet, List<String> titles){
