@@ -249,11 +249,11 @@ public class CheckEditionController {
         int rowIndex = 0;
         rowIndex = writeTitlesToExcel(wb,sheet,getTitles());
         Toexamine toexamine = new Toexamine();
-        String branch = (String)request.getAttribute("branch");
-        String devtasks = (String)request.getAttribute("devtasks");
-        String centerresult = (String)request.getAttribute("centerresult");
+       // String branch = (String)request.getAttribute("branch");
+       // String devtasks = (String)request.getAttribute("devtasks");
+       // String centerresult = (String)request.getAttribute("centerresult");
         String versriondate = (String)request.getAttribute("versriondate");
-        if(!StringUtils.isEmpty(branch)){
+        /*if(!StringUtils.isEmpty(branch)){
             toexamine.setBranch(branch);
         }
         if(!StringUtils.isEmpty(devtasks)){
@@ -261,7 +261,7 @@ public class CheckEditionController {
         }
         if(!StringUtils.isEmpty(centerresult)){
             toexamine.setCenterresult(centerresult);
-        }
+        }*/
         if(!StringUtils.isEmpty(versriondate)){
             toexamine.setVersriondate(versriondate);
         }
