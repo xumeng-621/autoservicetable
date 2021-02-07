@@ -66,7 +66,7 @@ public class CheckEditionController {
             ResponseEntity re = new ResponseEntity("success");
             return re;
         }else{
-            ResponseEntity re = new ResponseEntity("000","fail");
+            ResponseEntity re = new ResponseEntity("201","fail");
             return re;
         }
 
@@ -82,7 +82,7 @@ public class CheckEditionController {
             ResponseEntity re = new ResponseEntity("success");
             return re;
         }else{
-           ResponseEntity re = new ResponseEntity("000","fail");
+           ResponseEntity re = new ResponseEntity("201","fail");
            return re;
         }
     }
@@ -96,7 +96,7 @@ public class CheckEditionController {
             ResponseEntity re = new ResponseEntity("success");
             return re;
         }else{
-            ResponseEntity re = new ResponseEntity("000","fail");
+            ResponseEntity re = new ResponseEntity("201","fail");
             return re;
           }
 
@@ -137,7 +137,7 @@ public class CheckEditionController {
             ResponseEntity re = new ResponseEntity(list);
             return re;
         }else{
-            ResponseEntity re = new ResponseEntity("000","list is null");
+            ResponseEntity re = new ResponseEntity("201","list is null");
             return re;
         }
 
@@ -189,15 +189,15 @@ public class CheckEditionController {
                     toexamine.setDevtasks(row.getCell(21).getStringCellValue());
                 }
                 //版本日期
-                /*if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
+                if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
                     toexamine.setVersriondate(row.getCell(27).getStringCellValue());
-                }*/
+                }
                 checkEditionService.saveToexamine(toexamine);
             }
             ResponseEntity re = new ResponseEntity("success");
             return re;
         }else{
-            ResponseEntity re = new ResponseEntity("file is null");
+            ResponseEntity re = new ResponseEntity("201","file is null");
             return re;
         }
 
