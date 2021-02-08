@@ -16,7 +16,6 @@ import java.util.List;
 public class HelloSpringBootThymeleafApplicationTests {
    @Autowired
    private TesttableMapper testtableMapper;
-   @Test
     public void testSelect(){
        List<Testtable> testtables = testtableMapper.selectAll();
        for (Testtable tt :testtables){

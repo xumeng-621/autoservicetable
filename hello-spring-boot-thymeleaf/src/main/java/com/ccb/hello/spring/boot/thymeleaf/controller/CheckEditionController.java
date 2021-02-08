@@ -5,6 +5,7 @@ import com.ccb.hello.spring.boot.thymeleaf.service.CheckEditionService;
 import com.ccb.hello.spring.boot.thymeleaf.util.ResponseEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -194,9 +196,22 @@ public class CheckEditionController {
                 }
                 //版本日期
                 if(row.getCell(27)!=null){
-                    String str = row.getCell(27).toString();
-                    String newstr = str.substring(0,8);
-                    toexamine.setVersriondate(newstr);
+                    /*String str = row.getCell(27).getCellFormula();
+                    String newstr = str.substring(0,8);*/
+                    Cell cell = row.getCell(27);
+                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                        double d = cell.getNumericCellValue();
+                        Date date = HSSFDateUtil.getJavaDate(d);
+                        SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd");
+                        String newstr = dformat.format(date);
+                        toexamine.setVersriondate(newstr);
+                    } else {
+                        NumberFormat nf = NumberFormat.getInstance();
+                        nf.setGroupingUsed(false);// true时的格式：1,234,567,890
+                        String newstr = nf.format(cell.getNumericCellValue());// 数值类型的数据为double，所以需要转换一下
+                        toexamine.setVersriondate(newstr);
+                    }
+
                 }
                 checkEditionService.saveToexamine(toexamine);
             }
