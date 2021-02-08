@@ -13,4 +13,5 @@ public interface CheckEditionService{
     public void addToexamine(Toexamine toexamine);
     public void updateToexamine(Toexamine toexamine);
     public Toexamine selectToexamineById(String id);
+    public  int findTotalNumberBy(Map map);
 }

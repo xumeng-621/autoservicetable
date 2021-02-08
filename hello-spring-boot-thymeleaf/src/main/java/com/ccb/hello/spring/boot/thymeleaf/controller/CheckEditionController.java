@@ -104,7 +104,7 @@ public class CheckEditionController {
     @RequestMapping(value = "/selectData",method = RequestMethod.GET)
     @ApiOperation(value = "按条件查询数据",notes = "按条件查询数据")
     @ResponseBody
-    public ResponseEntity selectData(Model model, String branch, String devtasks, String centerresult, String versriondate,Integer currPage){
+    public ResponseEntity selectData(String branch, String devtasks, String centerresult, String versriondate,Integer currPage){
        /* String branch = (String)model.getAttribute("branch");
         String devtasks = (String)model.getAttribute("devtasks");
         String resultstatus = (String)model.getAttribute("resultstatus");*/
@@ -129,15 +129,17 @@ public class CheckEditionController {
         if(!StringUtils.isEmpty(versriondate)){
             map.put("versriondate",versriondate);
         }
-         List<Toexamine> list = checkEditionService.selectDate(map,currPage,20);
+         int totalnumber = checkEditionService.findTotalNumberBy(map);
+         List<Toexamine> list = checkEditionService.selectDate(map,currPage,10);
         //Toexamine toexamine = new Toexamine();
         //List<Toexamine> list = checkEditionService.selectToexamine(toexamine);
         //model.addAttribute("list",list);
         if(list!=null&&list.size()>0){
-            ResponseEntity re = new ResponseEntity(list);
+            ResponseEntity re = new ResponseEntity("200",Integer.toString(totalnumber),list);
             return re;
         }else{
-            ResponseEntity re = new ResponseEntity("201","list is null");
+            String [] str = new String[0];
+            ResponseEntity re = new ResponseEntity(str);
             return re;
         }
 
@@ -169,28 +171,32 @@ public class CheckEditionController {
                 Toexamine toexamine = new Toexamine();
                 Row row = sheetAt.getRow(j);
                 //基线号
-                if(!StringUtils.isEmpty(row.getCell(0).toString())){
-                    toexamine.setBaseline(row.getCell(0).toString());
+                if(row.getCell(0)!=null){
+                    String str = row.getCell(0).toString();
+                    String newstr = str.substring(0,5);
+                    toexamine.setBaseline(newstr);
                 }
                 //物理子系统
-                if(!StringUtils.isEmpty(row.getCell(1).getStringCellValue())){
+                if(row.getCell(1)!=null){
                     toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
                 }
                 //部署平台
-                if(!StringUtils.isEmpty(row.getCell(3).getStringCellValue())){
+                if(row.getCell(3)!=null){
                     toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
                 }
                 //所属银行
-                if(!StringUtils.isEmpty(row.getCell(5).getStringCellValue())){
+                if(row.getCell(5)!=null){
                     toexamine.setBranch(row.getCell(5).getStringCellValue());
                 }
                 //开发任务
-                if(!StringUtils.isEmpty(row.getCell(21).getStringCellValue())){
+                if(row.getCell(21)!=null){
                     toexamine.setDevtasks(row.getCell(21).getStringCellValue());
                 }
                 //版本日期
-                if(!StringUtils.isEmpty(row.getCell(27).getStringCellValue())){
-                    toexamine.setVersriondate(row.getCell(27).getStringCellValue());
+                if(row.getCell(27)!=null){
+                    String str = row.getCell(27).toString();
+                    String newstr = str.substring(0,8);
+                    toexamine.setVersriondate(newstr);
                 }
                 checkEditionService.saveToexamine(toexamine);
             }

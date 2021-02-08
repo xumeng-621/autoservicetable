@@ -45,4 +45,7 @@ public class CheckEditionServiceimpl implements CheckEditionService {
     public Toexamine selectToexamineById(String id){
         return toexamineMapper.selectByPrimaryKey(id);
     }
+    public  int findTotalNumberBy(Map map){
+        return toexamineMapper.findTotalNumberBy(map);
+    }
 }

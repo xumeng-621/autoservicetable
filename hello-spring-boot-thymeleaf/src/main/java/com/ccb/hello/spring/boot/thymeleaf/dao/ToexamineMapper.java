@@ -12,6 +12,22 @@ import java.util.Map;
 @Mapper
 public interface ToexamineMapper extends MyMapper<Toexamine> {
     @Select("<script>"+
+            "select count(*) from toexamine where 1=1"+
+            "<if test='branch != null'>"+
+            "and branch like #{branch}"+
+            "</if>"+
+            "<if test='devtasks != null'>"+
+            "and devtasks like #{devtasks}"+
+            "</if>"+
+            "<if test='centerresult != null'>"+
+            "and centerresult = #{centerresult}"+
+            "</if>"+
+            "<if test='versriondate != null'>"+
+            "and versriondate = #{versriondate}"+
+            "</if>"+
+            "</script>")
+    public int findTotalNumberBy(Map<String,String> map);
+    @Select("<script>"+
             "select * from toexamine where 1=1"+
             "<if test='branch != null'>"+
             "and branch like #{branch}"+
