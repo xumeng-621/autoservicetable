@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
+@CrossOrigin
 @Controller
 @RequestMapping("/checkEditionController")
 @Api(value = "基线数据", tags = "CheckEditionController", description = "版本检核")
@@ -53,7 +51,14 @@ public class CheckEditionController {
         }
         return "";
     }
-
+    @RequestMapping(value = "/versionDate",method = RequestMethod.GET)
+    @ApiOperation(value = "查询已存的版本日期",notes = "查询经过去重后导入数据库中的版本日期")
+    @ResponseBody
+    public ResponseEntity versionDate(){
+       List<String> list = checkEditionService.findVersionDate();
+       ResponseEntity re = new ResponseEntity(list);
+       return re;
+    }
     @RequestMapping(value = "/add",method = RequestMethod.POST )
     @ApiOperation(value = "添加数据",notes =  "增加页面：投产基线（baseline）物理子系统（physicalsubsystem）部署平台（deploymenplatform）" +
             "所属分行（branch）开发任务（devtasks）系统中文名（chinesename）是否投产（productionstatus）是否提交需求文档（requirementdocument）" +
@@ -168,51 +173,68 @@ public class CheckEditionController {
             Sheet sheetAt = workBook.getSheetAt(0);
             //获取excel有多少条数据
             int rowSize = sheetAt.getLastRowNum();
-            //循环取出数据
-            for(int j = 1; j<=rowSize;j++){
-                Toexamine toexamine = new Toexamine();
-                Row row = sheetAt.getRow(j);
-                //基线号
-                if(row.getCell(0)!=null){
-                    String str = row.getCell(0).toString();
-                    String newstr = str.substring(0,5);
-                    toexamine.setBaseline(newstr);
-                }
-                //物理子系统
-                if(row.getCell(1)!=null){
-                    toexamine.setPhysicalsubsystem(row.getCell(1).getStringCellValue());
-                }
-                //部署平台
-                if(row.getCell(3)!=null){
-                    toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
-                }
-                //所属银行
-                if(row.getCell(5)!=null){
-                    toexamine.setBranch(row.getCell(5).getStringCellValue());
-                }
-                //开发任务
-                if(row.getCell(21)!=null){
-                    toexamine.setDevtasks(row.getCell(21).getStringCellValue());
-                }
-                //版本日期
-                if(row.getCell(27)!=null){
+            List<Toexamine> list = new ArrayList<Toexamine>();
+            try{
+                //循环取出数据
+                for(int j = 1; j<=rowSize;j++){
+                    Toexamine toexamine = new Toexamine();
+                    Row row = sheetAt.getRow(j);
+                    //基线号
+                    if(row.getCell(0)!=null){
+                        String str = row.getCell(0).toString();
+                        String newstr = str.substring(0,5);
+                        toexamine.setBaseline(newstr);
+                    }
+                    //基线系统名
+                    if(row.getCell(1)!=null){
+                        String systemName = row.getCell(1).getStringCellValue().toString();
+                        toexamine.setSystemname(systemName);
+                        String[] totalname = systemName.split("\\)");
+                        String enname = totalname[0].substring(1);
+                        toexamine.setChinesename(totalname[1]);
+                        toexamine.setPhysicalsubsystem(enname);
+
+
+                    }
+                    //部署平台
+                    if(row.getCell(3)!=null){
+                        toexamine.setDeploymenplatform(row.getCell(3).getStringCellValue());
+                    }
+                    //所属银行
+                    if(row.getCell(5)!=null){
+                        toexamine.setBranch(row.getCell(5).getStringCellValue());
+                    }
+                    //开发任务
+                    if(row.getCell(21)!=null){
+                        toexamine.setDevtasks(row.getCell(21).getStringCellValue());
+                    }
+                    //版本日期
+                    if(row.getCell(27)!=null){
                     /*String str = row.getCell(27).getCellFormula();
                     String newstr = str.substring(0,8);*/
-                    Cell cell = row.getCell(27);
-                    if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                        double d = cell.getNumericCellValue();
-                        Date date = HSSFDateUtil.getJavaDate(d);
-                        SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd");
-                        String newstr = dformat.format(date);
-                        toexamine.setVersriondate(newstr);
-                    } else {
-                        NumberFormat nf = NumberFormat.getInstance();
-                        nf.setGroupingUsed(false);// true时的格式：1,234,567,890
-                        String newstr = nf.format(cell.getNumericCellValue());// 数值类型的数据为double，所以需要转换一下
-                        toexamine.setVersriondate(newstr);
-                    }
+                        Cell cell = row.getCell(27);
+                        if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                            double d = cell.getNumericCellValue();
+                            Date date = HSSFDateUtil.getJavaDate(d);
+                            SimpleDateFormat dformat = new SimpleDateFormat("yyyy-MM-dd");
+                            String newstr = dformat.format(date);
+                            toexamine.setVersriondate(newstr);
+                        } else {
+                            NumberFormat nf = NumberFormat.getInstance();
+                            nf.setGroupingUsed(false);// true时的格式：1,234,567,890
+                            String newstr = nf.format(cell.getNumericCellValue());// 数值类型的数据为double，所以需要转换一下
+                            toexamine.setVersriondate(newstr);
+                        }
 
+                    }
+                    list.add(toexamine);
                 }
+
+            }catch (Exception e){
+                ResponseEntity re = new ResponseEntity("201","data is error");
+                return re;
+            }
+            for(Toexamine toexamine:list){
                 checkEditionService.saveToexamine(toexamine);
             }
             ResponseEntity re = new ResponseEntity("success");
@@ -252,6 +274,14 @@ public class CheckEditionController {
         list.add("遗留缺陷");
         list.add("功能测试检核结果");
         list.add("功能风险等级");
+        list.add("备注");
+        list.add("非功能测试必要性评估表");
+        list.add("非功能测试方案");
+        list.add("非功能测试方案");
+        list.add("非功能测试案例");
+        list.add("非功能测试报告");
+        list.add("非功能数据库检核结果");
+        list.add("非功能测试检核结论");
         list.add("备注");
         list.add("版本安装测试报告");
         list.add("备注");
@@ -413,37 +443,53 @@ public class CheckEditionController {
                 cell19.setCellValue(rowData.getEndnumber());
             }
             Cell cell20 = dataRow.createCell(19);
+            cell20.setCellValue("");
             Cell cell21 = dataRow.createCell(20);
+            cell21.setCellValue("");
             Cell cell22 = dataRow.createCell(21);
+            cell22.setCellValue("");
             Cell cell23 = dataRow.createCell(22);
+            cell23.setCellValue("");
             Cell cell24 = dataRow.createCell(23);
+            cell24.setCellValue("");
             Cell cell25 = dataRow.createCell(24);
             if(!StringUtils.isEmpty(rowData.getResultstatus())) {
                 cell25.setCellValue(rowData.getResultstatus());
             }
             Cell cell26 = dataRow.createCell(25);
+            cell26.setCellValue("");
             Cell cell27 = dataRow.createCell(26);
             if(!StringUtils.isEmpty(rowData.getAuditopinion())) {
                 cell27.setCellValue(rowData.getAuditopinion());
             }
             Cell cell28 = dataRow.createCell(27);
+            cell28.setCellValue("");
             Cell cell29 = dataRow.createCell(28);
+            cell29.setCellValue("");
             Cell cell30 = dataRow.createCell(29);
+            cell30.setCellValue("");
             Cell cell31 = dataRow.createCell(30);
+            cell31.setCellValue("");
             Cell cell32 = dataRow.createCell(31);
+            cell32.setCellValue("");
             Cell cell33 = dataRow.createCell(32);
+            cell33.setCellValue("");
             Cell cell34 = dataRow.createCell(33);
+            cell34.setCellValue("");
             Cell cell35 = dataRow.createCell(34);
+            cell35.setCellValue("");
             Cell cell36 = dataRow.createCell(35);
             if(!StringUtils.isEmpty(rowData.getInstallfiles())) {
                 cell36.setCellValue(rowData.getInstallfiles());
             }
             Cell cell37 = dataRow.createCell(36);
+            cell37.setCellValue("");
             Cell cell38 = dataRow.createCell(37);
             if(!StringUtils.isEmpty(rowData.getSecuritydocuments())) {
                 cell38.setCellValue(rowData.getSecuritydocuments());
             }
             Cell cell39 = dataRow.createCell(38);
+            cell39.setCellValue("");
             Cell cell40 = dataRow.createCell(39);
             if(!StringUtils.isEmpty(rowData.getCenterresult())){
                 cell40.setCellValue(rowData.getCenterresult());

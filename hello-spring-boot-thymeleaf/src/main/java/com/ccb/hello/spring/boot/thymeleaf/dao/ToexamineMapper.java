@@ -46,4 +46,8 @@ public interface ToexamineMapper extends MyMapper<Toexamine> {
     public List<Toexamine> findData(Map<String,String> map);
     @Delete("delete from toexamine where id in (#{id})")
     public void deleteInIds(@Param("id") String id);
+    @Select("<script>"+
+    "SELECT DISTINCT versriondate from toexamine"+
+    "</script>")
+    public List<String> findVersionDate();
 }

@@ -14,4 +14,5 @@ public interface CheckEditionService{
     public void updateToexamine(Toexamine toexamine);
     public Toexamine selectToexamineById(String id);
     public  int findTotalNumberBy(Map map);
+    public List<String> findVersionDate();
 }
